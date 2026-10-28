@@ -1,0 +1,7 @@
+Fontes das legendas
+===================
+Por padrao as legendas usam "Arial Black" (ja vem no Windows).
+
+Para usar a fonte de sua preferencia (ex: Montserrat ExtraBold, Anton, Bebas Neue),
+copie o arquivo .ttf ou .otf para esta pasta. O editor usa a primeira fonte encontrada
+(dando preferencia para nomes com Black, ExtraBold ou Heavy).

@@ -1,0 +1,14 @@
+.vlist{display:grid;gap:8px;margin-top:10px}.vlist.hidden{display:none}
+.vrow{display:flex;align-items:center;gap:6px;min-width:0;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px}
+.vrow .n{width:14px;text-align:center;color:var(--accent);font-weight:700;flex:none}
+.vrow video{width:34px;height:46px;object-fit:cover;border-radius:8px;background:#000;flex:none}
+.vrow .meta{flex:1;min-width:0}.vrow .name{font-weight:600;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vrow .hint{font-size:10px;margin:2px 0 0}
+.vrow button{background:var(--panel3);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:3px 6px;cursor:pointer;font:inherit;font-size:12px;flex:none}
+.vrow button:hover:not(:disabled){border-color:var(--accent)}.vrow button:disabled{opacity:.3;cursor:default}
+.vtotal{font-size:11px;color:var(--muted)}
+.script-box{min-height:84px;margin-top:6px}
+.cleanup-box{margin-top:14px;display:grid;gap:8px}.cleanup-box .check{font-size:12px}.cleanup-box .hint{font-size:10px;line-height:1.5}
+.removed-box{margin-top:14px}.removed-box h3{font-size:13px;margin:0 0 8px}
+.removed-box table{width:100%;border-collapse:collapse;font-size:11px}.removed-box th,.removed-box td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.removed-box td.why{color:var(--err)}

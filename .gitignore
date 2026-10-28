@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+hf_runtime/
+workspace/
+saida/
+work*/
+takes/
+*.mp4
+*.mov
+*.webm
+*.wav
+*.mp3
+.env

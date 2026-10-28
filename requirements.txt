@@ -1,0 +1,7 @@
+flask>=3.0
+faster-whisper>=1.0.3
+numpy
+Pillow>=10.0
+imageio-ffmpeg>=0.5.1
+anthropic>=0.40
+auto-editor

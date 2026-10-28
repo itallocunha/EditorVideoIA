@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark"><title>Frame · Editor de Vídeo IA</title><link rel="stylesheet" href="/static/studio.css"><link rel="stylesheet" href="/static/extras.css"></head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/" aria-label="Frame, início"><span class="brand-mark" aria-hidden="true"><i></i><i></i></span>frame<span class="brand-ai">ESTÚDIO IA</span></a>
+  <div class="top-context"><span class="status-dot"></span> Edição local <span class="top-separator">/</span> Novo projeto</div>
+  <div class="chips" id="chips" aria-label="Estado dos motores"></div>
+</header>
+<div class="workspace-heading"><div><span class="eyebrow">DO BRUTO AO PRONTO</span><h1>Dê ritmo à sua próxima ideia<span>.</span></h1></div><span class="workspace-format">REELS <i>·</i> TIKTOK <i>·</i> SHORTS</span></div>
+<main class="studio">
+  <section class="media-column" aria-label="Mídia e pedido de edição">
+    <div class="warn hidden" id="warn" role="status"></div>
+    <div class="panel saved-projects"><label for="projectSelect">Projetos salvos neste computador</label><select id="projectSelect"><option value="">Abrir um projeto…</option></select><p class="hint" id="projectStatus">Os projetos ficam salvos e podem ser reabertos sem enviar o vídeo de novo.</p><p class="hint" id="saveStatus"></p></div>
+    <div class="panel media-panel"><div class="panel-heading"><h2><span class="section-number">01</span> Sua mídia</h2><span class="mini-label">COMECE AQUI</span></div>
+      <div class="drop drop-video" id="dropVideo" role="button" tabindex="0" aria-label="Escolher vídeo bruto">
+        <div id="videoEmpty"><span class="upload-icon" aria-hidden="true">↑</span><strong>Solte seu vídeo aqui</strong><span>ou clique para escolher</span><small>MP4, MOV, MKV, AVI ou WEBM</small></div>
+        <div id="videoFile" class="file-row hidden"><video id="videoThumb" muted preload="metadata"></video><div class="meta"><div class="name" id="videoName"></div><div id="videoMeta" class="hint"></div><button class="link" id="videoChange" type="button">Trocar vídeo</button></div></div>
+      </div><input type="file" id="videoInput" accept="video/*,.mkv" hidden>
+      <div class="support-heading"><span>Mais vídeos</span><span>OPCIONAL</span></div>
+      <div class="drop compact-drop" id="dropMore" role="button" tabindex="0" aria-label="Adicionar mais vídeos"><span class="add-icon" aria-hidden="true">＋</span><div><strong>Adicionar mais vídeos</strong><small>Eles entram na ordem da lista, depois do primeiro</small></div></div>
+      <input type="file" id="moreInput" accept="video/*,.mkv" multiple hidden>
+      <div class="vlist hidden" id="vlist"></div>
+      <div class="support-heading"><span>Imagens de apoio</span><span>OPCIONAL</span></div>
+      <div class="drop compact-drop" id="dropImages" role="button" tabindex="0" aria-label="Adicionar imagens de apoio"><span class="add-icon" aria-hidden="true">＋</span><div><strong>Adicionar imagens</strong><small>Nomeie com uma palavra da sua fala</small></div></div>
+      <input type="file" id="imagesInput" accept="image/*" multiple hidden><div class="thumbs" id="thumbs"></div>
+      <div class="support-heading"><span>Trilha sonora</span><span>OPCIONAL</span></div>
+      <div class="drop compact-drop" id="dropMusic" role="button" tabindex="0" aria-label="Adicionar trilha sonora"><span class="add-icon" aria-hidden="true">♫</span><div id="musicEmpty"><strong>Adicionar música</strong><small>O volume acompanha a sua voz</small></div><div id="musicFile" class="file-row hidden"><div class="meta"><div class="name" id="musicName"></div><button class="link" id="musicRemove" type="button">Remover</button></div></div></div><input type="file" id="musicInput" accept="audio/*" hidden>
+    </div>
+    <div class="panel brief-panel"><div class="panel-heading"><h2><span class="section-number">02</span> Sua direção</h2><span class="spark">✦</span></div><label for="prompt" class="brief-label">Como você imagina a edição?</label><textarea id="prompt" placeholder="Corte as pausas, destaque as palavras importantes e dê movimento ao vídeo..."></textarea><div class="examples" id="examples"></div>
+      <label for="script" class="brief-label">Roteiro do vídeo <span class="field-detail">OPCIONAL</span></label><textarea id="script" class="script-box" placeholder="Cole aqui o roteiro (gancho, corpo, chamada). O editor usa o texto para saber o que combina com o vídeo."></textarea>
+      <div class="cleanup-box"><div class="support-heading"><span>Limpeza da fala</span><span>AUTOMÁTICA</span></div>
+        <label class="check"><input type="checkbox" id="cl_takes" checked>Tirar falas erradas e tomadas repetidas</label>
+        <label class="check"><input type="checkbox" id="cl_fillers" checked>Tirar eh, ahn e gaguejos</label>
+        <label class="check"><input type="checkbox" id="cl_offtopic" checked>Tirar o que não combina com o roteiro/pedido</label>
+        <p class="hint">As pausas já são cortadas com cuidado. Na revisão, os trechos sugeridos aparecem marcados com ✂ e você decide o que fica.</p></div><div class="brief-note"><span>✦</span><p>Descreva o ritmo, as cores e o momento de cada imagem. Os controles ao lado refinam o resultado.</p></div></div>
+    <details class="local-info"><summary>Como a edição funciona</summary><p>A fala é transcrita com tempos por palavra. O editor corta pausas, cria legendas e posiciona as imagens de apoio. Você pode revisar o texto antes de gerar o MP4.</p><p>Os arquivos finais ficam na pasta <b>saida</b> do projeto.</p></details>
+  </section>
+  <section class="preview-column" aria-label="Prévia e resultado">
+    <div class="panel preview-panel" id="rightCard"><div class="preview-heading"><h2>Prévia do projeto</h2><span class="preview-badge" id="previewBadge">DEMONSTRAÇÃO</span></div>
+      <div id="viewEmpty">
+        <div class="preview-stage"><div class="stage-corner tl"></div><div class="stage-corner br"></div><div class="portrait" id="portrait">
+          <div class="demo-art" id="demoArt"><div class="art-grid"></div><div class="art-orbit"></div><div class="art-disc"></div><span class="art-kicker">DA IDEIA<br>AO MOVIMENTO.</span><span class="art-index">FRAME — 001<br>CRIADO PARA A SUA VOZ</span><div class="art-lines"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <video id="studioVideo" playsinline muted loop preload="metadata" class="hidden"></video>
+          <div class="portrait-shade"></div><div class="motion-card" id="motionCard" aria-hidden="true"><span>✦</span><div>UMA NOVA<br><b>PERSPECTIVA.</b></div><i></i></div><div class="safe-guide" id="safeGuide"></div>
+          <div class="demo-caption" id="demoCaption" aria-hidden="true"><span>UMA IDEIA</span><span>MUDA <b>TUDO.</b></span></div>
+          <div class="portrait-meta"><span id="sourceLabel">PRÉVIA DE ESTILO</span><span>9:16</span></div>
+        </div></div>
+        <div class="preview-transport"><button id="demoPlay" class="transport-button" type="button" aria-label="Pausar demonstração">Ⅱ</button><div class="transport-time" id="previewTime">00:00 <span>/ DEMO</span></div><div class="transport-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><button id="demoSound" class="transport-button" type="button" disabled title="Áudio disponível após enviar o vídeo" aria-label="Ativar som do vídeo">♪</button></div>
+        <p class="preview-note" id="previewNote"><span class="status-dot"></span>Demonstração aproximada. A fala e os cortes são sincronizados na exportação.</p>
+      </div>
+      <div id="viewWork" class="hidden">
+        <h2 id="workTitle">Processando</h2>
+        <div class="bar"><i id="barFill"></i></div>
+        <div class="pct"><span id="stageLabel">Enviando...</span><b id="pctLabel">0%</b></div>
+        <ul class="steps" id="steps"></ul>
+        <div class="live-preview hidden" id="livePreview"><video id="livePlayer" playsinline muted preload="metadata"></video><div id="liveElements"></div><div class="rvcap live-cap" id="liveCaption"></div></div>
+        <div class="log" id="log"></div>
+        <div class="actions"><button class="sec" id="cancel" type="button">Cancelar</button></div>
+        <div class="err hidden" id="errBox"></div>
+      </div>
+
+      <div id="viewReview" class="hidden">
+        <h2>Revisar legendas</h2>
+        <div class="hint">Assista, corrija o texto e os tempos. ✂ corta o trecho do vídeo, ✕ apaga só a legenda, ⎘ divide a linha onde está o cursor, ⇣ junta com a próxima. Escreva *palavra* entre asteriscos para dar ênfase.</div>
+        <div class="pv"><video id="rvPlayer" controls playsinline></video><div id="rvElements"></div><div class="rvcap" id="rvCap"></div><button class="sec hidden" id="rvProxy" type="button">Preparar prévia leve</button></div>
+        <div class="rvlist" id="rvList"></div>
+        <div class="actions">
+          <button class="go" id="rvRender" type="button">Gerar vídeo com estas legendas</button>
+          <button class="sec" id="rvSrt" type="button">Copiar legendas (.srt)</button>
+          <button class="sec" id="rvLast" type="button" disabled>Ver última exportação</button>
+          <button class="sec" id="rvBack" type="button">Voltar</button>
+        </div>
+        <div class="hint" id="rvMsg"></div>
+      </div>
+
+      <div id="viewAnalysis" class="hidden">
+        <h2>Análise do vídeo</h2>
+        <div class="stats" id="aStats"></div>
+        <div id="aAiNote" class="hint"></div>
+        <div id="aSummary"></div>
+        <div class="sub">Prompt sugerido para o editor</div>
+        <textarea id="aPrompt" class="big"></textarea>
+        <div class="actions">
+          <button class="go" id="aUse" type="button">Usar este prompt na edição</button>
+          <button class="sec" id="aCopyPrompt" type="button">Copiar prompt</button>
+        </div>
+        <div class="sub">Cenas</div>
+        <div class="frames" id="aFrames"></div>
+        <div id="aExtra"></div>
+        <div class="sub">Transcrição com tempos</div>
+        <div class="box" id="aTranscript"></div>
+        <div class="actions">
+          <button class="sec" id="aCopyTr" type="button">Copiar transcrição</button>
+          <button class="sec" id="aCopyPlain" type="button">Copiar só o texto</button>
+          <button class="sec" id="aCopySrt" type="button">Copiar legendas (.srt)</button>
+          <button class="sec" id="aCopyAll" type="button">Copiar relatório completo</button>
+        </div>
+        <div class="actions">
+          <a class="go" id="aDl" href="#">Baixar relatório</a>
+          <button class="sec" id="aFolder" type="button">Abrir pasta saída</button>
+          <button class="sec" id="aBack" type="button">Voltar</button>
+        </div>
+        <div class="hint" id="aMsg"></div>
+      </div>
+
+      <div id="viewDone" class="hidden">
+        <h2>Vídeo pronto</h2>
+        <video id="player" class="player" controls playsinline></video>
+        <div class="actions">
+          <a class="go" id="dl" href="#">Baixar vídeo</a>
+          <button class="sec" id="openFolder" type="button">Abrir pasta saída</button>
+          <button class="sec" id="again" type="button">Nova edição</button>
+        </div>
+        <div class="stats" id="stats"></div>
+        <div id="removedBox"></div><div id="renderInfo"></div><div id="imgPlan"></div>
+      </div>
+
+    </div>
+    <section class="panel timeline-panel" aria-label="Timeline do projeto">
+      <div class="timeline-heading"><div><span class="eyebrow" id="timelineMode">TEMPO EDITADO</span><h2>Timeline <span id="timelineCount">0 elementos</span></h2></div><label>Zoom <select id="timelineZoom"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option></select></label></div>
+      <div class="timeline-toolbar"><button class="sec" id="timelinePlay" type="button" disabled aria-label="Reproduzir timeline">▶</button><output id="timelineTime">00:00.00 / 00:00.00</output></div>
+      <input type="range" id="timelineSeek" min="0" max="1" step="0.01" value="0" disabled aria-label="Posição na timeline">
+      <div class="timeline-scroll"><div class="timeline-tracks" id="timelineTracks"></div></div>
+      <div class="timeline-inspector"><span class="mini-label">NA TELA AGORA</span><div id="timelineElements"></div><p class="hint" id="timelineNote"></p></div>
+    </section>
+    <div class="export-panel"><div class="export-heading"><div><h2>Pronto para dar o próximo passo?</h2><p id="goHint">Envie um vídeo para começar.</p></div><span class="export-format" id="exportFormat">MP4 <b>↑</b></span></div><button class="go" id="go" disabled type="button">Gerar vídeo <span aria-hidden="true">↗</span></button><div class="secondary-actions"><button class="sec" id="review" disabled type="button"><span aria-hidden="true">≡</span> Revisar legendas</button><button class="sec" id="analyze" disabled type="button"><span aria-hidden="true">✦</span> Analisar vídeo</button></div><p class="export-note">Revise o texto e os cortes antes de exportar, se preferir.</p></div>
+  </section>
+  <aside class="inspector-column" aria-label="Estilo e configurações">
+    <div class="panel inspector"><div class="panel-heading"><h2><span class="section-number">03</span> Estilo & movimento</h2></div><p class="inspector-intro">Um visual que acompanha a sua voz.</p>
+      <div class="style-grid" id="styleGrid" role="group" aria-label="Modelos de legenda">
+        <button type="button" class="style-tile selected" data-style="hormozi" aria-pressed="true"><span class="style-demo mini-hormozi">A SUA <b>IDEIA.</b></span><span class="style-name">Impacto <i>↗</i></span></button>
+        <button type="button" class="style-tile" data-style="editorial" aria-pressed="false"><span class="style-demo mini-editorial">menos é <b>mais.</b></span><span class="style-name">Editorial <i>↗</i></span></button>
+        <button type="button" class="style-tile" data-style="creator" aria-pressed="false"><span class="style-demo mini-creator">crie <b>conexões.</b></span><span class="style-name">Creator <i>↗</i></span></button>
+        <button type="button" class="style-tile" data-style="cinetico" aria-pressed="false"><span class="style-demo mini-cinetico"><b>EM</b> MOVIMENTO</span><span class="style-name">Cinético <i>↗</i></span></button>
+      </div>
+      <div class="field"><label for="subtitle_style">Estilo da legenda</label><select id="subtitle_style"><option value="auto">Automático · Impacto</option><option value="hormozi">Impacto · Hormozi</option><option value="editorial">Editorial</option><option value="creator">Creator</option><option value="cinetico">Cinético</option><option value="verde">Verde</option><option value="neon">Neon</option><option value="caixa">Caixa colorida</option><option value="suave">Suave</option></select></div>
+      <div class="control-divider"></div>
+      <div class="field"><label for="font">Tipografia <span class="field-detail" id="fontStatus">LOCAL</span></label><select id="font"><option value="auto">Padrão do estilo</option><option value="Impact">Impact</option><option value="Arial Black">Arial Black</option><option value="Segoe UI">Segoe UI</option><option value="Georgia">Georgia</option><option value="Trebuchet MS">Trebuchet MS</option></select></div>
+      <div class="field"><label for="caption_animation">Animação da legenda</label><select id="caption_animation"><option value="spring">Mola · elástica</option><option value="smooth">Suave · deslizar</option><option value="punch">Impacto · aproximar</option><option value="none">Sem animação</option></select></div>
+      <div class="field"><label for="font_scale">Tamanho da legenda <output id="fontScaleValue" for="font_scale">100%</output></label><input type="range" id="font_scale" min="0.7" max="1.4" step="0.05" value="1"><div class="range-labels"><span>Discreto</span><span>Expressivo</span></div></div>
+      <div class="grid2"><div class="field"><label for="subtitle_position">Posição</label><select id="subtitle_position"><option value="auto">Automática</option><option value="centro">Centro</option><option value="baixo">Parte de baixo</option></select></div><div class="field"><label for="motion_intensity">Movimento</label><select id="motion_intensity"><option value="off">Desligado</option><option value="subtle">Sutil</option><option value="balanced" selected>Equilibrado</option><option value="bold">Marcante</option></select></div></div><p class="hint motion-hint" id="motionHint">Destaques gráficos a partir da fala, com intensidade equilibrada.</p>
+      <div class="field color-field"><label for="active_color">Cor de destaque</label><div class="colorrow"><input type="color" id="active_color" value="#ffe600" aria-label="Cor da palavra destacada"><span id="colorHex">#FFE600</span><label class="check"><input type="checkbox" id="use_color">Personalizar</label></div></div>
+      <div class="control-divider"></div>
+      <div class="grid2"><div class="field"><label for="aspect">Formato</label><select id="aspect"><option value="auto">Automático</option><option value="9:16">Vertical · 9:16</option><option value="4:5">Retrato · 4:5</option><option value="1:1">Quadrado · 1:1</option><option value="16:9">Horizontal · 16:9</option><option value="original">Original</option></select></div><div class="field"><label for="quality">Qualidade</label><select id="quality"><option value="equilibrado">Equilibrada</option><option value="rapido">Rápida · teste</option><option value="alto">Alta</option></select></div></div>
+      <div class="check-row"><label class="check"><input type="checkbox" id="subtitles" checked>Legendas</label><label class="check"><input type="checkbox" id="punch_zoom" checked>Zoom entre cortes</label></div>
+      <details class="advanced"><summary>Mais ajustes <span>＋</span></summary><div class="field"><label for="caption_engine">Motor das legendas</label><select id="caption_engine"><option value="auto">Animadas · automático</option><option value="motion">Sempre animadas</option><option value="ass">Leve · animada (ASS)</option></select><p class="hint" id="engineHint">Verificando o motor de animação…</p></div><div class="field"><label for="min_silence">Corte de pausas</label><select id="min_silence"><option value="auto">Automático · pelo pedido</option><option value="0.26">Agressivo</option><option value="0.4">Normal</option><option value="0.75">Suave</option></select></div><div class="field"><label for="cut_engine">Motor de corte</label><select id="cut_engine"><option value="auto">auto-editor + Whisper</option><option value="whisper">Whisper</option></select></div><div class="field"><label for="look">Cor e contraste</label><select id="look"><option value="auto">Realçado</option><option value="cinematic">Cinematográfico</option><option value="vivid">Vibrante</option><option value="warm">Quente</option><option value="bw">Preto e branco</option><option value="none">Natural</option></select></div><div class="field"><label for="image_engine">Animação das imagens</label><select id="image_engine"><option value="auto">HyperFrames · automático</option><option value="ffmpeg">Simples · FFmpeg</option></select></div><div class="field"><label for="image_duration">Duração de cada imagem</label><select id="image_duration"><option value="auto">Automática</option><option value="1.8">Curta · 1,8 s</option><option value="2.8">Média · 2,8 s</option><option value="4">Longa · 4 s</option></select></div><div class="field"><label for="whisper_model">Modelo de transcrição</label><select id="whisper_model"><option value="small">Small · rápido e preciso</option><option value="base">Base · mais rápido</option><option value="medium">Medium · requer NVIDIA</option><option value="large-v3">Large v3 · requer GPU</option></select></div><div class="field"><label for="language">Idioma da fala</label><select id="language"><option value="">Detectar automaticamente</option><option value="pt">Português</option><option value="en">Inglês</option><option value="es">Espanhol</option></select></div><div class="field"><label for="api_key">Chave Anthropic · opcional</label><input type="password" id="api_key" placeholder="sk-ant-..." autocomplete="off"><p class="hint">Permite interpretar o pedido com IA e descrever cenas. Sem chave, o editor usa regras locais. A chave é usada somente pelo servidor local.</p></div></details>
+    </div>
+  </aside>
+</main><footer class="studio-footer"><span>frame <b>·</b> Dê espaço à sua voz.</span><span>Feito para conteúdo vertical.</span></footer>
+<script src="/static/studio.js"></script>
+<script src="/static/timeline.js"></script>
+<script src="/static/extras.js"></script>
+</body></html>
