@@ -280,7 +280,7 @@ for si in range(1, len(SEGMENTS)):
     if si not in g("FLASH_BEFORE_SEGMENT", []):
         SFX.append(("whoosh", span[si][0] - 0.2, 0.15))
 
-FD = Path("/usr/share/fonts/truetype/google-fonts")
+FD = Path(__file__).resolve().parent / "fonts"  # Poppins e Lora (SIL OFL) vem junto no repositorio
 files = {"poppins-bold.ttf": FD / "Poppins-Bold.ttf", "poppins-bi.ttf": FD / "Poppins-BoldItalic.ttf", "lora-italic.ttf": FD / "Lora-Italic-Variable.ttf"}
 acc_font = "font-family:PBI;font-style:normal;font-weight:700;font-size:132px" if STYLE == "pulso" else "font-family:LoraI;font-style:italic;font-weight:700;font-size:140px"
 CSS = f"""

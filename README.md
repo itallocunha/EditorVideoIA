@@ -178,4 +178,5 @@ Além do app, o repositório traz dois motores que editam a partir de um "plano"
 
 - GSAP (`pulso/gsap.min.js`), licença padrão da GreenSock/Webflow.
 - Fontes Archivo Black e JetBrains Mono (`narrado/fonts/`), SIL Open Font License, via Fontsource.
+- Fontes Poppins e Lora (`pulso/fonts/`), SIL Open Font License, via Google Fonts (licenças em `pulso/fonts/OFL-*.txt`).
 - earshot e real-sound (opcionais, não incluídos), MIT, por Leon Lin.
