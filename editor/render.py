@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from .config import FPS, QUALITY
-from .media import run_ffmpeg
+from .media import filter_script_args, run_ffmpeg
 
 
 def _even(n: float) -> int:
@@ -43,7 +43,7 @@ def cut_video(src, out, keep, size, fps, punch_zoom, work_dir, on_progress=None,
     script.write_text("\n".join(parts), encoding="utf-8")
     total = sum(e - s for s, e in keep)
     run_ffmpeg(
-        ["-i", src, "-filter_complex_script", script, "-map", "[outv]", "-map", "[outa]",
+        ["-i", src, *filter_script_args(script), "-map", "[outv]", "-map", "[outa]",
          "-c:v", "libx264", "-preset", "veryfast", "-crf", "16", "-pix_fmt", "yuv420p",
          "-c:a", "aac", "-b:a", "256k", "-movflags", "+faststart", out],
         total_dur=total, on_progress=on_progress, cancel=cancel,
@@ -193,7 +193,7 @@ def compose_final(cut_path, out_path, size, duration, placements, ass_name, has_
 
     preset, crf = QUALITY.get(quality, QUALITY["equilibrado"])
     run_ffmpeg(
-        [*inputs, "-filter_complex_script", script, "-map", "[vout]", "-map", "[aout]",
+        [*inputs, *filter_script_args(script), "-map", "[vout]", "-map", "[aout]",
          "-c:v", "libx264", "-preset", preset, "-crf", str(crf), "-pix_fmt", "yuv420p",
          "-r", str(fps), "-c:a", "aac", "-ac", "2", "-b:a", "192k", "-ar", "48000",
          "-movflags", "+faststart", "-t", f"{duration:.3f}", out_path],

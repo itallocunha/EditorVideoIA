@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .media import clear_rotation, probe, run_ffmpeg
+from .media import clear_rotation, filter_script_args, probe, run_ffmpeg
 
 FPS = 30
 
@@ -49,7 +49,7 @@ def join_videos(paths, out, cancel=None, on_progress=None):
 
     script = Path(out).with_suffix(".graph.txt")
     script.write_text(";\n".join(fc), encoding="utf-8")
-    run_ffmpeg([*args, "-filter_complex_script", str(script), "-map", "[outv]", "-map", "[outa]",
+    run_ffmpeg([*args, *filter_script_args(script), "-map", "[outv]", "-map", "[outa]",
                 "-c:v", "libx264", "-preset", "veryfast", "-crf", "15", "-pix_fmt", "yuv420p",
                 "-c:a", "aac", "-b:a", "256k", "-movflags", "+faststart", str(out)],
                total_dur=total, on_progress=on_progress, cancel=cancel)
