@@ -27,7 +27,7 @@
     (m.images||[]).forEach(im=>add(im.generated?'Movimentos':'Imagens',im.start,im.start+im.duration,im.label||im.text||im.image,im.generated?'motion':'image',{image:im}));
     if(m.music)add('Áudio',0,dur,'Trilha sonora','audio');
     const labels=['Vídeo','Legendas','Imagens','Movimentos',...(m.lines?.some(l=>l.cut)?['Cortes']:[]),...(m.music?['Áudio']:[])];
-    const ticks=Array.from({length:7},(_,i)=>'<span style="left:'+i/6*100+'%">'+time(dur*i/6).slice(0,-3)+'</span>').join('');
+    const ticks=Array.from({length:7},(_,i)=>'<span style="left:'+i/6*100+'%">'+(dur<12?time(dur*i/6):time(dur*i/6).slice(0,-3))+'</span>').join('');
     rows.push('<div class="tl-row tl-ruler"><span class="tl-label">TEMPO</span><div class="tl-lane">'+ticks+'</div></div>');
     for(const label of labels){let count=0;const bars=elements.map((e,i)=>{if(e.track!==label)return '';count++;return '<button class="tl-clip tl-'+e.kind+'" data-index="'+i+'" style="left:'+e.start/dur*100+'%;width:'+Math.max(.15,(e.end-e.start)/dur*100)+'%" title="'+esc(e.text)+' · '+time(e.start)+' – '+time(e.end)+'" aria-label="'+esc(label+': '+e.text)+'">'+esc(e.text)+'</button>';}).join('');rows.push('<div class="tl-row"><span class="tl-label">'+label+'</span><div class="tl-lane">'+(count?bars:'<span class="tl-empty">Nenhum elemento</span>')+'</div></div>');}
     $('timelineTracks').innerHTML=rows.join('')+'<div class="tl-cursor" aria-hidden="true"></div>';

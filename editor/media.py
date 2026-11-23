@@ -30,7 +30,8 @@ def _list_filters(exe: str):
         ).stdout
     except Exception:
         return None
-    return set(re.findall(r"^\s*[A-Z.]{3}\s+(\S+)\s", out, re.M))
+    # linha: "<flags> <nome> <entradas>-><saidas> <descricao>"; o numero de flags mudou entre versoes
+    return set(re.findall(r"^\s*\S+\s+(\S+)\s+\S*->\S*", out, re.M))
 
 
 def ffmpeg_info() -> dict:
@@ -72,6 +73,31 @@ def ffmpeg_info() -> dict:
             best["version"] = ""
     _state["info"] = best
     return best
+
+
+def _major(version_line: str):
+    m = re.search(r"version\s+n?(\d+)\.", version_line or "")
+    return int(m.group(1)) if m else None
+
+
+def filter_script_args(path) -> list:
+    """Argumentos para ler o filtro complexo de um arquivo.
+
+    O FFmpeg 7 trocou -filter_complex_script por -/filter_complex (o prefixo "/" le o valor de um
+    arquivo) e o FFmpeg 8 removeu a opcao antiga. Usa a nova sempre que existir."""
+    info = ffmpeg_info()
+    if "new_fc" not in info:
+        major = _major(info.get("version", ""))
+        if major is not None:
+            info["new_fc"] = major >= 7
+        else:   # build de git ("N-12345-g..."): pergunta ao proprio FFmpeg
+            try:
+                h = subprocess.run([info["path"], "-hide_banner", "-h", "full"], capture_output=True, text=True,
+                                   encoding="utf-8", errors="replace", timeout=60, creationflags=NO_WINDOW).stdout
+                info["new_fc"] = "filter_complex_script" not in h
+            except Exception:
+                info["new_fc"] = True
+    return ["-/filter_complex", str(path)] if info["new_fc"] else ["-filter_complex_script", str(path)]
 
 
 def ffmpeg_exe() -> str:

@@ -12,3 +12,6 @@
 .removed-box{margin-top:14px}.removed-box h3{font-size:13px;margin:0 0 8px}
 .removed-box table{width:100%;border-collapse:collapse;font-size:11px}.removed-box th,.removed-box td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line);vertical-align:top}
 .removed-box td.why{color:var(--err)}
+.brief-label[for=script]{margin-top:18px}
+@media(max-width:760px){.preview-column{display:contents}.preview-panel{order:1}.timeline-panel{order:2}.inspector-column{order:3}.export-panel{order:4;align-self:stretch}}
+@media(max-width:460px){.inspector{display:block}.inspector>.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}}

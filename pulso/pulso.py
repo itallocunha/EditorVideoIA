@@ -11,6 +11,7 @@ import numpy as np
 EDITOR = Path(__import__("os").environ.get("EDITOR_VIDEO_IA", Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(EDITOR))
 from editor import cuts, transcribe, hyperframes_fx as hf  # noqa: E402
+from editor.media import ffmpeg_exe, filter_script_args  # noqa: E402
 
 spec = importlib.util.spec_from_file_location("plano", sys.argv[1])
 P = importlib.util.module_from_spec(spec); spec.loader.exec_module(P)
@@ -121,10 +122,10 @@ parts.append(f"{labels}concat=n={len(pieces)}:v=1:a=1[outv][outa]")
 (WORK / "cut_graph.txt").write_text(";\n".join(parts))
 cut = WORK / "cut.mp4"
 if not cut.exists():
-    args = ["ffmpeg", "-v", "error", "-y"]
+    args = [ffmpeg_exe(), "-v", "error", "-y"]
     for p in pieces:
         args += ["-i", str(TAKES[p[1]])]
-    subprocess.run(args + ["-filter_complex_script", str(WORK / "cut_graph.txt"), "-map", "[outv]", "-map", "[outa]",
+    subprocess.run(args + [*filter_script_args(WORK / "cut_graph.txt"), "-map", "[outv]", "-map", "[outa]",
                            "-c:v", "libx264", "-preset", "veryfast", "-crf", "16", "-c:a", "aac", "-b:a", "256k", str(cut)], check=True)
 
 # ---------------- 4. camada animada
@@ -280,7 +281,7 @@ for si in range(1, len(SEGMENTS)):
     if si not in g("FLASH_BEFORE_SEGMENT", []):
         SFX.append(("whoosh", span[si][0] - 0.2, 0.15))
 
-FD = Path("/usr/share/fonts/truetype/google-fonts")
+FD = Path(__file__).resolve().parent / "fonts"  # Poppins e Lora (SIL OFL) vem junto no repositorio
 files = {"poppins-bold.ttf": FD / "Poppins-Bold.ttf", "poppins-bi.ttf": FD / "Poppins-BoldItalic.ttf", "lora-italic.ttf": FD / "Lora-Italic-Variable.ttf"}
 acc_font = "font-family:PBI;font-style:normal;font-weight:700;font-size:132px" if STYLE == "pulso" else "font-family:LoraI;font-style:italic;font-weight:700;font-size:140px"
 CSS = f"""

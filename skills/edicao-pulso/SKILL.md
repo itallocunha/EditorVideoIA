@@ -31,7 +31,7 @@ Template de edição de Reels verticais (1080x1920, 30 fps) inspirado num Reel d
 ## Passo a passo
 1. Receber os takes (anexos) e o roteiro, se houver. Converter cada take para wav 16 kHz mono.
 2. Transcrever com tempo por palavra. O sandbox não baixa modelos; usar o Whisper do PC dele: enviar os wav para `<pasta do EditorVideoIA>\workspace\takes_<nome>\` (device_commit_files), pedir acesso a `<home>\.cache` se preciso e, no device_bash, rodar faster-whisper (modelo `models--Systran--faster-whisper-medium`, int8, language="pt", word_timestamps=True, initial_prompt com hesitações). Salvar `words_medium.json` no formato `{"1": [{"w":..,"s":..,"e":..}], ...}` e trazer de volta com device_stage_files.
-3. Montar o motor: ler do Project os arquivos `claude/pulso/pulso.py`, `claude/pulso/plano_exemplo.py` e `claude/pulso/editor/{cuts,transcribe,hyperframes_fx,media,config}.py`. Colocar os do editor em `/home/claude/EditorVideoIA/editor/` (criar `__init__.py` vazio). O HyperFrames instala o runtime sozinho na primeira vez; no sandbox usar `HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`.
+3. Montar o motor: ler do Project os arquivos `claude/pulso/pulso.py`, `claude/pulso/plano_exemplo.py`, a pasta `claude/pulso/fonts/` (Poppins e Lora; fica ao lado do `pulso.py`) e `claude/pulso/editor/{cuts,transcribe,hyperframes_fx,media,config,sfx_bank}.py`. Colocar os do editor em `/home/claude/EditorVideoIA/editor/` (criar `__init__.py` vazio). O HyperFrames instala o runtime sozinho na primeira vez; no sandbox usar `HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`.
 4. Escrever o plano (copiar `plano_exemplo.py`): TAKES, WORDS_JSON, WORK, OUT, SEGMENTS (take, palavra inicial, palavra final, enquadramento `("static", z)` / `("push", z0, z1)` / `("bw", z)`, legenda `("single",)` / `("kinetic", grupos)` / `("top", grupos)`; `*palavra*` = destaque, `[x]` = letra destacada), mais ARC_TITLES, PILLS, CARD_SCENES, SCRIBBLE_TITLES, STEPS, HEADLINES, FLASH_BEFORE_SEGMENT, OUTRO, ENDING. Cortar o que não está no roteiro e tomadas repetidas.
 5. Conferir o layout antes de renderizar: `python3 pulso.py plano.py html` gera `layer.html`; tirar quadros com Playwright em alguns tempos e olhar.
 6. Renderizar: `python3 pulso.py plano.py` (camada leva ~2-3 min). Conferir quadros do MP4 final (orientação em pé, legenda fora do rosto, nada cortado) e enviar com SendUserFile.
@@ -39,5 +39,5 @@ Template de edição de Reels verticais (1080x1920, 30 fps) inspirado num Reel d
 
 ## Limitações conhecidas
 - Sem recorte de pessoa (fundo trocado, texto atrás do corpo, silhueta): não há ferramenta de remoção de fundo offline no sandbox.
-- Fontes disponíveis: Poppins e Lora; aproximam as da referência.
+- Fontes: Poppins (Bold e BoldItalic) e Lora Italic vêm junto em `pulso/fonts/`; aproximam as da referência.
 - B-roll (gravação de tela, mãos no notebook) só entra se o Itallo mandar os arquivos.
