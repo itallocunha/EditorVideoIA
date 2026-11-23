@@ -4,6 +4,12 @@ Você joga o vídeo bruto, as imagens e a música, escreve o que quer em um prom
 vídeo editado: pausas cortadas, legendas dinâmicas palavra por palavra e imagens animadas.
 Tudo roda no seu computador.
 
+## Para o Claude e para quem vai configurar o ambiente
+
+- `CLAUDE.md`: instruções para o Claude (como editar, regras fixas, caminhos das skills).
+- `SETUP.md`: tudo o que precisa ser instalado, rede liberada, chaves e problemas comuns.
+- `scripts/preparar.sh` instala o que falta (Mac, Linux ou nuvem) e `scripts/verificar.sh` confere.
+
 ## Como usar
 
 1. Dê dois cliques em `iniciar.bat`.

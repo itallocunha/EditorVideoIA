@@ -13,3 +13,7 @@ takes/
 *.wav
 *.mp3
 .env
+
+modelos/
+temp/
+.env.*
